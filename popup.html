@@ -9,11 +9,71 @@
   <body>
     <main class="container">
       <header class="header">
-        <h1>Browser TOTP</h1>
-        <span class="badge">v0.1.0</span>
+        <div class="header-title">
+          <h1>Browser TOTP</h1>
+          <span id="countdown-badge" class="badge hidden" title="Seconds remaining">30s</span>
+        </div>
+        <div id="header-actions" class="header-actions hidden">
+          <button id="lock-btn" class="btn btn-secondary" type="button" title="Lock vault">Lock</button>
+          <button id="toggle-form-btn" class="btn btn-primary" type="button">+ Add</button>
+        </div>
       </header>
-      <section class="content">
-        <p id="status-text">Extension loaded and ready.</p>
+
+      <section id="setup-view" class="auth-card hidden">
+        <p class="auth-hint">Create a master password to encrypt your TOTP secrets locally.</p>
+        <form id="setup-form" class="auth-form" novalidate>
+          <div class="field">
+            <label for="setup-password">Master Password</label>
+            <input id="setup-password" type="password" placeholder="At least 6 characters" autocomplete="new-password" required />
+          </div>
+          <div class="field">
+            <label for="setup-confirm">Confirm Password</label>
+            <input id="setup-confirm" type="password" placeholder="Re-enter password" autocomplete="new-password" required />
+          </div>
+          <p id="setup-error" class="form-error hidden"></p>
+          <button class="btn btn-primary" type="submit">Create Vault</button>
+        </form>
+      </section>
+
+      <section id="unlock-view" class="auth-card hidden">
+        <p class="auth-hint">Vault is locked. Enter your master password to view codes.</p>
+        <form id="unlock-form" class="auth-form" novalidate>
+          <div class="field">
+            <label for="unlock-password">Master Password</label>
+            <input id="unlock-password" type="password" placeholder="Enter master password" autocomplete="current-password" required />
+          </div>
+          <p id="unlock-error" class="form-error hidden"></p>
+          <button class="btn btn-primary" type="submit">Unlock</button>
+        </form>
+      </section>
+
+      <section id="vault-view" class="hidden">
+        <form id="add-form" class="add-form hidden" novalidate>
+          <div class="field">
+            <label for="issuer-input">Issuer</label>
+            <input id="issuer-input" type="text" placeholder="e.g. GitHub" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="account-input">Account</label>
+            <input id="account-input" type="text" placeholder="e.g. user@example.com" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="secret-input">Secret (Base32)</label>
+            <input id="secret-input" type="text" placeholder="e.g. JBSWY3DPEHPK3PXP" autocomplete="off" required />
+          </div>
+          <p id="form-error" class="form-error hidden"></p>
+          <div class="form-actions">
+            <button id="cancel-form-btn" class="btn btn-secondary" type="button">Cancel</button>
+            <button class="btn btn-primary" type="submit">Save TOTP</button>
+          </div>
+        </form>
+
+        <section class="list-section">
+          <ul id="totp-list" class="totp-list"></ul>
+          <p id="empty-state" class="empty-state hidden">
+            No TOTPs saved yet. Click <strong>+ Add</strong> to store your first key.
+          </p>
+        </section>
       </section>
     </main>
     <script src="popup.js"></script>
